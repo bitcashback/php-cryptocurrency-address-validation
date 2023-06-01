@@ -20,6 +20,13 @@ class Bech32Decoder
     ];
 
     /**
+     * Constants to use this fork for validate checksum
+     * @see https://github.com/doersf/bech32
+     */
+    const BECH32_CONST = 1;
+    const BECH32M_CONST = 0x2bc830a3;
+
+    /**
      * @throws Bech32Exception
      * @param string $sBech - the bech32 encoded string
      * @return array - returns [$hrp, $dataChars]
@@ -87,7 +94,7 @@ class Bech32Decoder
         $expandHrp = self::hrpExpand($hrp, \strlen($hrp));
         $r = \array_merge($expandHrp, $convertedDataChars);
         $poly = self::polyMod($r, \count($r));
-        return $poly === 1;
+        return $poly === self::BECH32_CONST || $poly === self::BECH32M_CONST;
     }
 
     /**
